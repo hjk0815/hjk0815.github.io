@@ -4,7 +4,7 @@ title: Eigen
 
 
 ## 矩阵Matrix 模板参数
-``` bash
+``` cpp
 Matrix<typename Scalar,
        int RowsAtCompileTime,
        int ColsAtCompileTime,
@@ -44,7 +44,7 @@ std::unique_ptr : 独占所有权，不允许多个unique_ptr共享一个对象�
 
 std::shared_ptr : 共享所有权，可以多个shared_ptr共享一个对象，最后一个shared_ptr被销毁时，管理的对象才被销毁.
 其设计主要针对单个对象，对处于同一块内存的对象有性能优化，对于数组不建议使用shared_ptr,用vector
-``` bash
+``` cpp
 // 创建shared_ptr
 std::shared_ptr<class> obj_ptr = std::make_shared<class>();
 ```
