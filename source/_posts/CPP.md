@@ -11,7 +11,7 @@ Welcome to [C++]
 ## 成员变量或函数的命名约定
 public : 公共的成员变量不建议直接暴露，而是通过公共成员函数来获取
 protect : 结尾加下划线, 比如member_
-private  : 开头加下划线, 比如_member
+private  : 结尾加下划线, 比如member_ （我觉得也可用开头加下划线 _member）
 
 ## UML类图
 ### 箭头
@@ -93,3 +93,32 @@ void printValues(const std::string& fmt, Args&&... args) {
 ### 原子操作
 `std::atomic<bool> data` : 该类型用于实现原子的布尔类型操作，确保对其进行的读写操作是原子的。
 该类型的load方法可用获取该值 可指定读取顺序，比如load(std::memory_order_relaxed)是以最轻量级读取
+
+
+### 资源锁
+`std::lock_guard` : 一个管理互斥锁的类（std::mutx等互斥锁）自动管理锁的生命周期
+
+
+### 引用成员变量和const成员变量
+引用成员变量和const成员变量只能在初始化列表中初始化，因为他们不能通过赋值来进行初始化，只能在申明的时候进行初始化。
+
+
+## RALL (Resource Acquisition Is Initialization)
+资源获取就是初始化:
+**可以指定对象具有构造函数和析构函数，这些构造函数和析构函数在适当的时候由编译器自动调用，这为管理给定对象的内存提供了更为方便的方法。**
+RAII总结如下：
+
+- 资源在析构函数中被释放
+
+- 该类的实例是堆栈分配的
+- 资源是在构造函数中获取的。 
+
+RAII代表“资源获取是初始化”。
+
+常见的例子有：
+
+- 文件操作
+
+- 智能指针 std :: shared_ptr，std :: unique_ptr
+
+- 互斥量 std :: lock_guard
