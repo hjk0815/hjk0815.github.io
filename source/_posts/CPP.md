@@ -122,3 +122,135 @@ RAII代表“资源获取是初始化”。
 - 智能指针 std :: shared_ptr，std :: unique_ptr
 
 - 互斥量 std :: lock_guard
+
+## 用户自定义字面量
+user-defined literals,例如
+```cpp
+struct length {
+  double value;
+  enum unit {
+    metre,
+    kilometre,
+    millimetre,
+    centimetre,
+    inch,
+    foot,
+    yard,
+    mile,
+  };
+  static constexpr double factors[] = {1.0,    1000.0, 1e-3,   1e-2,
+                                       0.0254, 0.3048, 0.9144, 1609.344};
+
+  explicit length(double v, unit u = metre) { value = v * factors[u]; }
+};
+
+length operator+(length lhs, length rhs) {
+  return length(lhs.value + rhs.value);
+}
+
+length operator"" _m(long double v) { return length(v, length::metre); }
+```
+中` operator"" _m ` 就是用户自定义的字面量。
+
+## 成员函数说明符
+
+```cpp
+class A {
+public:
+  virtual void foo();
+  virtual void bar();
+  void foobar();
+};
+
+class B : public A {
+public:
+  void foo() override;       // OK
+  void bar() override final; // OK
+                             // void foobar() override;
+  //   非虚函数不能  override
+};
+
+class C final : public B {
+public:
+  void foo() override; // OK
+                       // void bar() override;
+  //  final  函数不可  override
+};
+
+class D : public C {
+  //  错误：final  类不可派生
+};
+```
+
+## 泛型编程和模板
+### 模板
+1. 模板
+2. 模板全特化 : 全特化意味着你为某个具体类型完全重新定义模板的实现，而不是使用模板的默认实现。
+```cpp
+#include <iostream>
+using namespace std;
+
+// 普通函数模板
+template <typename T>
+T add(T a, T b) {
+    return a + b;
+}
+
+// 函数模板的全特化：为 const char* 特化
+template <>
+const char* add(const char* a, const char* b) {
+    return "This is a specialized version for const char*";
+}
+```
+3. 模板偏特化 : 在某些类型的基础上进行部分特化，而不是完全特化。它允许对部分模板参数进行特定类型的处理，而不需要完全指定所有参数的类型。
+偏特化不能用于函数模板，只能用于类模板。偏特化常见的用法是在部分模板参数上进行特化处理。
+```cpp
+#include <iostream>
+using namespace std;
+
+// 定义一个类模板，接受两个类型参数
+template <typename T1, typename T2>
+class MyClass {
+public:
+    MyClass() {
+        cout << "Generic template version" << endl;
+    }
+};
+
+// 对类模板进行偏特化：当第二个类型参数为 int 时
+template <typename T1>
+class MyClass<T1, int> {
+public:
+    MyClass() {
+        cout << "Partial specialization for T2 = int" << endl;
+    }
+};
+// 对指针类型进行偏特化
+template <typename T>
+class MyClass<T*> {
+public:
+    MyClass() {
+        cout << "Partial specialization for pointers" << endl;
+    }
+};
+```
+
+### 一个阶乘的简单例子
+```cpp
+#include <iostream>
+
+using namespace std;
+
+template <int n> struct factorial {
+  static_assert(n >= 0, "Arg must be non-negative");
+  static const int value = n * factorial<n - 1>::value;
+};
+
+template <> struct factorial<0> { static const int value = 1; };
+
+int main() {
+
+  printf("%d\n", factorial<10>::value);
+  return 0;
+}
+```
