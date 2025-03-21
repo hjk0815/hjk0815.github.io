@@ -1,4 +1,3 @@
-
 ---
 xilinx: petalinux
 ---
