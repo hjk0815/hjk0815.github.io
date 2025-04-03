@@ -2,6 +2,26 @@
 title : os 系统
 ---
 
+- [自启动 使用 systemmd 服务](#-------systemmd---)
+    + [create app](#create-app)
+    + [file path](#file-path)
+    + [服务编写](#----)
+    + [配方编写](#----)
+- [linux常用指令](#linux----)
+    + [systemctl](#systemctl)
+- [petalinux 系统制作](#petalinux-----)
+  * [系统引导和文件系统的制作](#------------)
+  * [initram临时系统文件制作](#initram--------)
+  * [ext4文件系统制作](#ext4------)
+    + [编译结果的文件解释](#---------)
+      - [BOOT.bin](#bootbin)
+      - [image.ub](#imageub)
+      - [system.bit(bitstream)](#systembit-bitstream-)
+      - [rootfs_cpio.tar.gz](#rootfs-cpiotargz)
+      - [zynqmp_fsbl.elf](#zynqmp-fsblelf)
+
+
+
 
 # 自启动 使用 systemmd 服务
 - 在petalinux或yocto构建的系统中 
@@ -42,24 +62,27 @@ systemd 读取 /lib/systemd/system/ 中的服务文件，并根据 WantedBy 配�
 ```service
 [Unit]
 Description=Hawaii Algorithm Service  
-After=network-online.target  # 等待网络完全就绪（需 systemd-networkd-wait-online）
-After=serial-getty@ttyPS0.service  # 等待串口 Getty 服务启动
-Requires=network-online.target      # 强制依赖网络就绪
-Requires=serial-getty@ttyPS0.service  # 强制依赖串口服务
-
-# After=multi-user.target            # 在系统进入多用户模式后启动
+After=network-online.target  
+After=serial-getty@ttyPS0.service  
+Requires=network-online.target      
+Requires=serial-getty@ttyPS0.service  
+        
 
 [Service]
 Type=simple
-ExecStart=/home/petalinux/hawaii_algorithm  # 可执行程序的install目录 取决于你的.bb文件
+ExecStart=/petalinux/hawaii_algorithm  
 Restart=on-failure
 User=root
-StandardOutput=journal+console       # 输出到日志和控制台
-StandardError=journal+console
+StandardOutput=journal    
+StandardError=journal 
 
 # 如果目录不存在，启动前自动创建
-ExecStartPre=/bin/mkdir -p /home/petalinux
-ExecStartPre=/bin/chmod 755 /home/petalinux
+ExecStartPre=/bin/mkdir -p /petalinux
+ExecStartPre=/bin/mkdir -p /petalinux/log/ps
+ExecStartPre=/bin/mkdir -p /petalinux/log/algorithm
+ExecStartPre=/bin/chmod 755 /petalinux
+ExecStartPre=/bin/chmod 644 /petalinux/log/ps
+ExecStartPre=/bin/chmod 644 /petalinux/log/algorithm
 
 [Install]
 WantedBy=multi-user.target
@@ -69,23 +92,22 @@ WantedBy=multi-user.target
 ```service
 [Unit]
 Description=Hawaii autostart service
-After=hawaii_algorithm.service  # 明确依赖 hawaii_algorithm
-Requires=hawaii_algorithm.service  # 强制依赖
+After=hawaii_algorithm.service  
+Requires=hawaii_algorithm.service  
+After=serial-getty@ttyPS0.service     
+Requires=serial-getty@ttyPS0.service  
+After=multi-user.target   
 
 [Service]
 Type=simple
-# ExecStart=/etc/init.d/autostart start  # 直接调用原有脚本
+# ExecStart=/etc/init.d/autostart start  
 # 或直接执行命令（推荐）：
-ExecStart=/home/petalinux/hawaii 
+ExecStart=/petalinux/hawaii 
 Restart=on-failure
 User=root
-StandardOutput=journal+console       # 输出到日志和控制台
-StandardError=journal+console
+StandardOutput=journal
+StandardError=journal
 
-
-# 如果目录不存在，启动前自动创建
-ExecStartPre=/bin/mkdir -p /home/petalinux
-ExecStartPre=/bin/chmod 755 /home/petalinux
 
 [Install]
 WantedBy=multi-user.target  # 设置启动目标
@@ -106,7 +128,8 @@ LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda
 SRC_URI = "file://hawaii_algorithm \
            file://hawaii \
            file://hawaii_algorithm.service \
-           file://hawaii.service"
+           file://hawaii.service \
+            file://zlog.conf"
 
 # 继承 systemd 类以支持服务管理
 inherit systemd
@@ -114,34 +137,151 @@ inherit systemd
 # 启用 systemd 服务
 SYSTEMD_SERVICE:${PN} = "hawaii_algorithm.service hawaii.service"
 
+SYSTEMD_AUTO_ENABLE:${PN} = "disable"
+
 S = "${WORKDIR}"
 
 do_install() {
     # 创建目录
-    install -d -m 0755 ${D}/home/petalinux
+    install -d -m 0644 ${D}/petalinux
 
-    # 安装可执行程序到 /home/petalinux
-    install -m 0755 ${S}/hawaii_algorithm ${D}/home/petalinux/
-    install -m 0755 ${S}/hawaii ${D}/home/petalinux/
+    # 安装可执行程序到 /petalinux
+    install -m 0755 ${S}/hawaii_algorithm ${D}/petalinux/
+    install -m 0755 ${S}/hawaii ${D}/petalinux/
+    install -m 0644 ${S}/zlog.conf ${D}/petalinux/
 
     # 安装 systemd 服务文件到 /lib/systemd/system
     install -d ${D}${systemd_system_unitdir}
     install -m 0644 ${S}/hawaii_algorithm.service ${D}${systemd_system_unitdir}/
     install -m 0644 ${S}/hawaii.service ${D}${systemd_system_unitdir}/
-
 }
 
 # 定义安装后的文件路径（关键！）
 FILES:${PN} += " \
     ${systemd_system_unitdir}/hawaii.service \
     ${systemd_system_unitdir}/hawaii_algorithm.service \
-    /home/petalinux/hawaii \
-    /home/petalinux/hawaii_algorithm \
+    /petalinux/hawaii \
+    /petalinux/hawaii_algorithm \
+    /petalinux/zlog.conf \
 "
 ```
 
 
-# 
+
+# linux常用指令
+
+### systemctl
+1. 查看活跃的服务 : systemctl list-units --type=service --state=running 
+2. 查看指定服务状态: systemctl status ***.service
+3. 启动关闭重启: systemctl start servicename ; systemctl stop <service_name>; systemctl restart <service_name>
+4. 获取服务日志: sudo journalctl -u hawaii.service -xe --no-pager
+5. journal查看指定日志的输出 : journalctl -u hawaii.service
+
+
+
+# petalinux 系统制作
+
+## 系统引导和文件系统的制作
+zynqmp板子需要用BOOT.BIN 和 *_fsbl.elf 来启动, 需要先编一个ext4的文件系统再打包成BOOT.BIN
+1. petalinux-create -t project --template zynqMP -n hawaii
+cd lark
+petalinux-config --get-hw-description ../xsa
+
+2. petalinux-config
+> 配置yocto 配置离线编译 注意download路径需要再前面添加file://
+> 设置文件系统类型为initram
+petalinux-config-->yocto settings-->add pre-mirror url-->回车，输入下面内容，也就是download所在目录：
+file:///home/lifeng/codes/share_files/2022.2/downloads 
+
+petalinux-config-->yocto settings-->local sstate feeds settings-->回车，输入下面内容，也就是aarch64所在目录：
+/home/lifeng/codes/share_files/2022.2/aarch64 
+
+3. 需要配置一下网络
+    1. petalinux-config -c u-boot
+    -->boot options-->enable boot arguments->earlycon console=ttyPS0,115200n8 mem=2G@0x0 root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4 cpuidle.off=1 cma=192M@0x10000000
+    > 这里的0x10000000就是某一个hp口在vivado里分配的数据空间.
+    2. 返回-->选择enable a default value for bootcmd，输入内容：
+    bootm 20000000（这是16进制）
+    3. -->选择enable preboot，输入内容：
+    run scsi_init;usb start;mdio write 0 0x1f 0x4000;sleep 1;mdio write 0 0x0D 0x001F;mdio write 0 0x0E 0x0573;mdio write 0 0x0D 0x401F;mdio write 0 0x0E 0x0001;mdio write 0 0x0D 0x001F;mdio write 0 0x0E 0x056a;mdio write 0 0x0D 0x401F;mdio write 0 0x0E 0x5f41;mdio write 0 0x0D 0x001F;mdio write 0 0x0E 0x0602;mdio write 0 0x0D 0x401F;mdio write 0 0x0E 0x0003;fatload mmc 0:1 20000000 image.ub;fatload mmc 0:1 10000000 system.bit;fpga loadb 0 10000000 100;
+4. petalinux-build 编译一下
+5. petalinux-package --boot --u-boot --force 生成boot.bin，将生成的BOOT.BIN  和 fsbl.elf 烧写到板子上
+6. 启动卡进u-boot 设置ip (1 2 可视情况使用)
+    1. env default -a回复uboot默认参数 
+    2. 重启进入u-boot (回复默认环境变量之后需要重启)
+    2. setenv ipaddr 192.168.1.10
+    3. setenv serverip 192.168.1.112
+    4. setenv tftp "tftpboot 10000000 system.bit;fpga loadb 0 10000000 1000;tftpboot 0x200000 Image;tftpboot 0x10000000 rootfs.cpio.gz.u-boot;tftpboot 0x1000 system.dtb;booti 0x200000 0x10000000 0x1000"
+
+## initram临时系统文件制作
+1. petalinux-config
+> 配置yocto 配置离线编译 注意download路径需要再前面添加file://
+> 设置文件系统类型为initram
+petalinux-config-->yocto settings-->add pre-mirror url-->回车，输入下面内容，也就是download所在目录：
+file:///home/lifeng/codes/share_files/2022.2/downloads 
+
+petalinux-config-->yocto settings-->local sstate feeds settings-->回车，输入下面内容，也就是aarch64所在目录：
+/home/lifeng/codes/share_files/2022.2/aarch64 
+
+3. petalinux-build 编译一遍
+4. petalinux-package --boot --u-boot --force 打包
+5. 将编译完的images/linux目录下的Image rootfs.cpio.gz.u-boot 和 system.dtb 拷贝到tftp目录下
+6. 进入u-boot 运行 run tftp
+7. 后续见 [ext4文件系统](#1)
+
+
+
+<p id="1"></p> 
+
+## ext4文件系统制作
+1. petalinux-config 修改文件系统类型为ext4
+2. petalinux-build 编译
+3. 登录临时文件系统后， 制作硬盘分区并同步文件(已经有分区了就不需要再做了)
+    第一个fat32，第二个ext4：
+    1. 取消分区1的挂载 sudo umount /dev/mmcblk0p1
+	2. sudo fdisk /dev/mmcblk0-->n-->p-->1-->+1024M-->t-->b-->n-->p-->2-->回车-->回车-->p-->w (根据提示做就行，实在不行就删除了再做)
+	3. sudo mkfs.vfat -F 32 /dev/mmcblk0p1
+	4. sudo mkfs.ext4 /dev/mmcblk0p2
+
+4. 下载image.ub和system.bit到mmcblk0p1：
+    mkdir test
+    sudo mount /dev/mmcblk0p1 test
+    sudo scp hjk@192.168.1.112:/mnt/Data/workspace/peta_prj/hawaii_16K_2GB_h128_202503251750/hawaii/images/linux/image.ub ./test
+    sudo scp hjk@192.168.1.112:/mnt/Data/workspace/peta_prj/hawaii_16K_2GB_h128_202503251750/hawaii/images/linux/system.bit ./test
+    sync
+    sudo umount /dev/mmcblk0p1
+5. 下载rootfs.tar.gz到mmcblk0p2 并解压
+    sudo mount /dev/mmcblk0p2 ./test
+    sudo scp hjk@192.168.1.112:/mnt/Data/workspace/peta_prj/hawaii_16K_2GB_h128_202503251750/hawaii/images/linux/rootfs.tar.gz ./test
+    sudo tar -xzvf ./test/rootfs.tar.gz
+    sync
+    sudo umount /dev/mmcblk0p2
+    sudo reboot
+
+ 
+
+
+
+
+### 编译结果的文件解释
+
+#### BOOT.bin
+用于 Zynq 系列 SoC 的引导文件，包含了引导加载程序（Bootloader）、FSBL（First Stage Boot Loader）、FPGA 位流（FPGA Bitstream）和其他引导所需的文件。
+引导加载程序会加载 BOOT.bin 文件到 SoC 中，然后执行其中的 FSBL，接着启动 Linux 内核或者其他操作系统。
+BOOT.bin 文件通常由 Xilinx Vivado 工具生成，其中包含了 FSBL 和 FPGA 位流的打包，用于引导 Zynq 系列 SoC 并初始化系统。
+#### image.ub  
+通常包含了引导加载程序（Bootloader）、内核（Kernel）和根文件系统（Root File System）等
+#### system.bit(bitstream) 
+包含了 FPGA 的配置信息以及设计在 FPGA 中的逻辑实现。
+#### rootfs_cpio.tar.gz 
+根文件系统的打包文件，用于存储整个文件系统的内容。这种文件通常包含了操作系统中的文件、目录结构、库文件、配置文件等。其中，.cpio 表示使用 cpio 工具进行打包，
+.tar.gz 表示使用 tar 工具进行打包并使用 gzip 进行压缩。在嵌入式系统中，根文件系统是操作系统运行时所需的文件系统，包含了操作系统核心和用户空间程序所需的文件。
+#### zynqmp_fsbl.elf 
+是 Zynq 系列 SoC 中的第一阶段引导加载程序（FSBL），用于启动系统并配置硬件环境。
+FSBL 负责初始化处理器、DDR 存储器、外设等硬件，并加载 Linux 内核或其他操作系统到内存中。
+zynqmp_fsbl.elf 是 FSBL 的可执行文件
+
+<p id="2"></p>
 
 
 
