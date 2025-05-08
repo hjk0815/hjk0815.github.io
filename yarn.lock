@@ -840,6 +840,14 @@ hexo-server@^3.0.0:
     picocolors "^1.0.0"
     serve-static "^1.14.1"
 
+hexo-theme-butterfly@^5.3.5:
+  version "5.3.5"
+  resolved "https://registry.npmjs.org/hexo-theme-butterfly/-/hexo-theme-butterfly-5.3.5.tgz"
+  integrity sha512-Zh2mc7Tj+QAatUBEkhbfHuyb779ZOd72bx12CDohK0cEQ4rtc4Tc4ukuTiTsNJv5hd7ipMjWXpDJwKIzPTN01Q==
+  dependencies:
+    hexo-renderer-pug "^3.0.0"
+    hexo-renderer-stylus "^3.0.1"
+
 hexo-theme-landscape@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/hexo-theme-landscape/-/hexo-theme-landscape-1.0.0.tgz"
