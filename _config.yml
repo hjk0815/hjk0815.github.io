@@ -8,8 +8,27 @@ subtitle: ''
 description: ''
 keywords:
 author: JK
-language: en
+language: zh-CN
 timezone: ''
+
+nav:
+  logo: /image/test.gif
+  display_title: true
+  fixed: false # fixed navigation bar    
+post_asset_folder: true  
+menu:
+  首页: / || fas fa-home
+  时间轴: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  分类: /categories/ || fas fa-folder-open
+  清单||fa fa-heartbeat:
+    音乐: /music/ || fas fa-music
+    照片: /Gallery/ || fas fa-images
+    电影: /movies/ || fas fa-video
+
+runtimeshow:
+  enable: true
+  publish_date: 15/7/2024 00:00:00
 
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
