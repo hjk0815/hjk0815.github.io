@@ -184,7 +184,7 @@ FILES:${PN} += " \
 ## 系统引导和文件系统的制作
 zynqmp板子需要用BOOT.BIN 和 *_fsbl.elf 来启动, 需要先编一个ext4的文件系统再打包成BOOT.BIN
 1. petalinux-create -t project --template zynqMP -n hawaii
-cd lark
+cd hawaii
 petalinux-config --get-hw-description ../xsa
 
 2. petalinux-config
@@ -283,6 +283,78 @@ zynqmp_fsbl.elf 是 FSBL 的可执行文件
 
 <p id="2"></p>
 
+### u-boot 
+U-Boot是嵌入式系统中常用的引导加载程序，负责初始化硬件并加载操作系统。
+of_**系列函数是设备树相关函数
 
+
+
+
+
+### SysMonPSU
+AMS Analog Mixed Signal 
+XADC Xilinx Analog-to-Digital Converter
+
+在/sys/bus/iio/devices/iio\:device0 下会更新设备的一些状态信息
+
+
+#### pgrep 获取指定进程信息
+
+
+
+#### 驱动创建
+petalinux-create -t modules --name fpgaversion --enable
+
+#### 应用创建
+petalinux-create -t apps --template install --name autoinsmod --enable
+
+### gdb 远程调试
+1. 在petalinux项目中运行, 编译gdbserver
+```console
+petalinux-config -c rootfs
+```
+Filesystem Package
+    --> misc
+        ---> gdb
+            --> [*]gdbserver
+
+2. petalinux-build 之后用这个系统即可
+
+3. 启动系统后运行
+```console
+sudo gdbserver 宿主机ip:端口号 ./hawaii 
+```
+hawaii运行需要sudo权限
+
+在宿主机vscode中添加项目launch.json (设置根据自己的设置更改)
+```json
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(gdb) 启动",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "${workspaceFolder}/bin/hawaii",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      "miDebuggerPath": "/usr/bin/gdb-multiarch",
+      "miDebuggerServerAddress": "192.168.1.10:1234",
+      "setupCommands": [
+        {
+          "description": "为 gdb 启用整齐打印",
+          "text": "-enable-pretty-printing",
+          "ignoreFailures": true
+        }
+      ]
+    },
+  ]
+}
+```
+打完断点后直接gdb启动就行
 
 
