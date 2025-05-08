@@ -357,4 +357,4 @@ hawaii运行需要sudo权限
 ```
 打完断点后直接gdb启动就行
 
-test
+te
