@@ -4,7 +4,7 @@
 
 # Site
 title: HexoJK
-subtitle: ''
+# subtitle: ''
 description: ''
 keywords:
 author: JK
@@ -38,7 +38,7 @@ canvas_fluttering_ribbon:
 click_heart:
   enable: true
   mobile: false
-  
+
 # URL
 ## Set your site url here. For example, if you use GitHub Page, set url as 'https://username.github.io/project'
 url: http://example.com
