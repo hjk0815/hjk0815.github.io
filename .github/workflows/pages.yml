@@ -27,12 +27,13 @@ jobs:
           key: ${{ runner.OS }}-npm-cache
           restore-keys: |
             ${{ runner.OS }}-npm-cache
-      - name: Install Dependencies
+      - name: Clean Install
         run:  |
-          rm -rf node_modules  # 强制清理旧依赖
+          rm -rf node_modules  
           npm cache clean --force
-          npm ci --no-audit --prefer-offline  # 严格按 lockfile 安装
-          npm install
+          npm ci --no-audit --prefer-offline  
+      - name: Install Dependencies
+        run: npm install
       - name: Build
         run: npm run build
       - name: Upload Pages artifact
