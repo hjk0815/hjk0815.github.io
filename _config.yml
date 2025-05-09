@@ -4,7 +4,7 @@
 
 # Site
 title: HexoJK
-subtitle: 'blog'
+subtitle: ''
 description: ''
 keywords: jk
 author: JK
@@ -12,7 +12,7 @@ language: zh-CN
 timezone: ''
 
 nav:
-  logo: /image/test.gif
+  # logo: /image/test.gif
   display_title: true
   fixed: false # fixed navigation bar    
 post_asset_folder: true  
@@ -133,3 +133,5 @@ deploy:
   repo: git@github.com:hjk0815/hjk0815.github.io.git
   # repo: git@47.113.187.110:/home/git/hexo.git
   branch: master
+
+
