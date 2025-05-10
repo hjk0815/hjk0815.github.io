@@ -3,28 +3,13 @@
 ## Source: https://github.com/hexojs/hexo/
 
 # Site
-title: HexoJK
-subtitle: ''
-description: ''
+title: 雷子集中营
+subtitle: 'jk'
+description: '雷子集中营营长'
 keywords: jk
-author: JK
+author: 索雷博
 language: zh-CN
 timezone: ''
-
-nav:
-  # logo: /image/test.gif
-  display_title: true
-  fixed: false # fixed navigation bar    
-post_asset_folder: true  
-menu:
-  首页: / || fas fa-home
-  时间轴: /archives/ || fas fa-archive
-  标签: /tags/ || fas fa-tags
-  分类: /categories/ || fas fa-folder-open
-  清单||fa fa-heartbeat:
-    音乐: /music/ || fas fa-music
-    照片: /Gallery/ || fas fa-images
-    电影: /movies/ || fas fa-video
 
 runtimeshow:
   enable: true
@@ -73,7 +58,8 @@ relative_link: false
 future: true
 syntax_highlighter: highlight.js
 highlight:
-  line_number: true
+  enable: false
+  line_number: false
   auto_detect: false
   tab_replace: ''
   wrap: true

@@ -1,6 +1,12 @@
 ---
-title : os 系统
+title: OS System        # 标题
+tags: [OS]             # 标签
+categories:               # 分类
+description: os system  # 描述
+top_img: /image/jizi.png # 顶部背景图
+cover: /image/动漫少女.jpg   # 文章封面
 ---
+
 
 - [自启动 使用 systemmd 服务](#-------systemmd---)
     + [create app](#create-app)

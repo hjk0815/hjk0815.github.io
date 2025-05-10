@@ -9,18 +9,40 @@
 # Navigation Settings
 # --------------------------------------
 
+# nav:
+#   # Navigation bar logo image
+#   logo:
+#   display_title: true
+#   # Whether to fix navigation bar
+#   fixed: false
+
+# menu:
+#   Home: / || fas fa-home
+#   List||fas fa-list:
+#     Music: /music/ || fas fa-music
+#     Movie: /movies/ || fas fa-video
 nav:
-  # Navigation bar logo image
   logo:
   display_title: true
-  # Whether to fix navigation bar
-  fixed: false
-
+  fixed: false # fixed navigation bar    
+post_asset_folder: true  
 menu:
-  Home: / || fas fa-home
-  List||fas fa-list:
-    Music: /music/ || fas fa-music
-    Movie: /movies/ || fas fa-video
+  首页: / || fas fa-home
+  时间轴: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  分类: /categories/ || fas fa-folder-open
+  清单||fa fa-heartbeat:
+    音乐: /music/ || fas fa-music
+    照片: /Gallery/ || fas fa-images
+    电影: /movies/ || fas fa-video
+
+
+highlight_theme: mac  #  darker / pale night / light / ocean / mac / mac light / false 代码主题
+highlight_copy: true # 复制按钮
+highlight_lang: false # 是否显示代码语言
+highlight_shrink: false # true: 代码块默认不展开 / false: 代码块默认展开 | none: 展开并隐藏折叠按钮
+highlight_height_limit: false # unit: px
+code_word_wrap: true #代码自动换行，关闭滚动条
 
 # --------------------------------------
 # Code Blocks Settings
@@ -45,8 +67,11 @@ code_blocks:
 # Formal:
 #   icon: link || the description || color
 social:
-  # fab fa-github: https://github.com/xxxxx || Github || '#24292e'
-  # fas fa-envelope: mailto:xxxxxx@gmail.com || Email || '#4a7dbe'
+   fab fa-github: https://github.com/hjk0815 || Github
+   fa fa-book-open: https://blog.csdn.net/mjh1667002013 || CSDN
+   fab fa-qq:  tencent://AddContact/?fromId=45&fromSubId=1&subcmd=all&uin=1779165536&website=www.oicqzone.com || QQ
+   fas fa-envelope-open-text: mailto:18586626234@163.com || Email
+
 
 # --------------------------------------
 # Image Settings
@@ -55,23 +80,23 @@ social:
 favicon: /img/favicon.png
 
 avatar:
-  img: /img/butterfly-icon.png
+  img: /image/jk.jpg
   effect: false
 
 # Disable all banner images
 disable_top_img: false
 
 # If the banner of page not setting, it will show the default_top_img
-default_top_img:
+default_top_img: /image/jizi.png
 
 # The banner image of index page
-index_img:
+index_img: /image/jizi.png
 
 # The banner image of archive page
-archive_img:
+archive_img: /image/银狼.jpg
 
 # Note: tag page, not tags page
-tag_img:
+tag_img: /image/银狼.jpg
 
 # The banner image of tag page, you can set the banner image for each tag
 # Format:
@@ -79,7 +104,7 @@ tag_img:
 tag_per_img:
 
 # Note: category page, not categories page
-category_img:
+category_img: /image/miku-1.jpg
 
 # The banner image of category page, you can set the banner image for each category
 # Format:
@@ -94,18 +119,25 @@ footer_img: false
 background:
 
 cover:
-  # Disable the cover or not
-  index_enable: true
+  index_enable: true #  是否展示文章封面
   aside_enable: true
   archives_enable: true
-  # When cover is not set, the default cover is displayed
-  default_cover:
-    # - xxx.jpg
+  position: both # 封面展示的位置 left/right/both
+  # 当没有设置cover时，默认展示的文章封面
+  # default_cover:
+  #   # 当配置多张图片时，会随机选择一张作为 cover. 此时写法为
+  #   - https:
+  #   - http:
+  #   - http:
+  #   - http:
+  #   - http:
+  #   - http:
+
 
 # Replace Broken Images
 error_img:
-  flink: /img/friend_404.gif
-  post_page: /img/404.jpg
+  flink: /image/秘书.gif
+  post_page: /image/不良少女.jpg
 
 # A simple 404 page
 error_404:
@@ -143,26 +175,27 @@ post_meta:
 # The position of site info, eg: 300px/300em/300rem/10%
 index_site_info_top:
 # The height of top_img, eg: 300px/300em/300rem
-index_top_img_height:
+index_top_img_height: 400px
 
 # The subtitle on homepage
+# 主页subtitle
 subtitle:
-  enable: false
-  # Typewriter Effect
+  enable: true
+  # Typewriter Effect (打字效果)
   effect: true
-  # Customize typed.js
-  # https://github.com/mattboldt/typed.js/#customization
-  typed_option:
-  # Source - Call the third-party service API (Chinese only)
-  # It will show the source first, then show the content of sub
-  # Choose: false/1/2/3
-  # false - disable the function
-  # 1 - hitokoto.cn
-  # 2 - https://api.aa1.cn/doc/yiyan.html
-  # 3 - jinrishici.com
-  source: false
-  # If you close the typewriter effect, the subtitle will only show the first line of sub
+  startDelay: 300 # time before typing starts in milliseconds
+  typeSpeed: 200 # type speed in milliseconds
+  backSpeed: 800 # backspacing speed in milliseconds
+  # loop (循环打字)
+  loop: true
+  # source 调用三方服务
+  # source: false 开关调用
+  # subtitle 会先显示 source , 再显示 sub 的內容
+  source: true
+  # 如果关闭打字效果，subtitle 只会显示 sub 的第一行文字
   sub:
+    - 以雷霆 &#44; 击碎黑暗
+    - 以信仰 &#44; 肘击未来
 
 # Article layout on the homepage
 # 1: Cover on the left, info on the right
@@ -191,8 +224,8 @@ index_post_content:
 toc:
   post: true
   page: false
-  number: true
-  expand: false
+  number: false
+  expand: true
   # Only for post
   style_simple: false
   scroll_percent: true
@@ -206,15 +239,12 @@ post_copyright:
 
 # Sponsor/reward
 reward:
-  enable: false
-  text:
+  enable: true
   QR_code:
-    # - img: /img/wechat.jpg
-    #   link:
-    #   text: wechat
-    # - img: /img/alipay.jpg
-    #   link:
-    #   text: alipay
+     - img: /image/alipay.jpg
+       link:
+       text: 支付宝
+
 
 # Post edit
 # Easily browse and edit blog source code online.
@@ -272,7 +302,7 @@ aside:
   button: true
   mobile: true
   # Position: left / right
-  position: right
+  position: left
   display:
     archive: true
     tag: true
@@ -284,10 +314,10 @@ aside:
       enable: true
       icon: fab fa-github
       text: Follow Me
-      link: https://github.com/xxxxxx
+      link: https://github.com/hjk0815
   card_announcement:
     enable: true
-    content: This is my Blog
+    content: 雷子信徒可入
   card_recent_post:
     enable: true
     # If set 0 will show all
@@ -473,15 +503,13 @@ search:
     # Number of search results per page
     hitsPerPage: 6
 
-  # Local Search
-  local_search:
-    # Preload the search data when the page loads.
-    preload: false
-    # Show top n results per article, show all results by setting to -1
-    top_n_per_article: 1
-    # Unescape html strings to the readable one.
-    unescape: false
-    CDN:
+# Local search
+local_search:
+  enable: true
+  labels:
+    input_placeholder: Search for Posts
+    hits_empty: "We didn't find any results for the search: ${query}" # 如果没有查到内容相关内容显示
+
 
   # Docsearch
   # https://docsearch.algolia.com/
@@ -503,6 +531,7 @@ share:
   # Share.js
   # https://github.com/overtrue/share.js
   sharejs:
+    enable: true
     sites: facebook,twitter,wechat,weibo,qq
 
   # AddToAny
@@ -770,15 +799,11 @@ mask:
   header: true
   footer: true
 
-# Loading Animation
+#加载动画
 preloader:
-  enable: false
-  # source
-  # 1. fullpage-loading
-  # 2. pace (progress bar)
-  source: 1
-  # pace theme (see https://codebyzach.github.io/pace/)
-  pace_css_url:
+  enable: true
+  source: 1 #可选值1=fullpage或2=progress bar，可查看https://codebyzach.github.io/pace/
+  pace_css_url: 
 
 # Page Transition
 enter_transitions: true
@@ -819,10 +844,10 @@ hr_icon:
 # Typewriter Effect
 # https://github.com/disjukr/activate-power-mode
 activate_power_mode:
-  enable: false
+  enable: true
   colorful: true
   shake: true
-  mobile: false
+  mobile: true
 
 # Background effects
 # --------------------------------------
@@ -841,13 +866,13 @@ canvas_ribbon:
 
 # Fluttering Ribbon
 canvas_fluttering_ribbon:
-  enable: false
+  enable: true
   mobile: false
 
 # canvas_nest
 # https://github.com/hustcc/canvas-nest.js
 canvas_nest:
-  enable: false
+  enable: true
   # Color of lines, default: '0,0,0'; RGB values: (R,G,B).(note: use ',' to separate.)
   color: '0,0,255'
   # The opacity of line (0~1)
@@ -866,7 +891,7 @@ fireworks:
 
 # Mouse click effects: Heart symbol
 click_heart:
-  enable: false
+  enable: true
   mobile: false
 
 # Mouse click effects: words
@@ -1028,8 +1053,10 @@ css_prefix: true
 inject:
   head:
     # - <link rel="stylesheet" href="/xxx.css">
+    - <link rel="stylesheet" href="/styles/main.css">
+    - <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
   bottom:
-    # - <script src="xxxx"></script>
+    - <script src="/styles/fish.js"></script>
 
 # CDN Settings
 # Don't modify the following settings unless you know how they work
