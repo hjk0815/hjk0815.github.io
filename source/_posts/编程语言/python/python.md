@@ -1,5 +1,10 @@
 ---
 title: effective python 
+date: 2025-05-12 15:10:47
+tags: [python]
+categories: [编程语言]
+top_img:
+cover:
 ---
 
 

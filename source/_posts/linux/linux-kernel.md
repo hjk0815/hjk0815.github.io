@@ -1,7 +1,12 @@
 ---
 title: linux kernel
+tags: [os]
+categories: [linux]
+description: linux kernel learning
+date: 2025-05-12 11:02:41
+top_img: /image/动漫少女.jpg
+cover: /image/动漫少女.jpg
 ---
-
 
 
 # kernel 编译常见错误

@@ -1,6 +1,13 @@
 ---
 title: C++ 常用函数
+date: 2025-05-12 15:04:47
+tags: [c++]
+categories: [编程语言]
+top_img:
+cover:
 ---
+
+
 Welcome to [C++]
 [CPP合集(github)](https://github.com/huihut/interview?tab=readme-ov-file#cc)
 [虚函数表实现机制](https://blog.twofei.com/496/)

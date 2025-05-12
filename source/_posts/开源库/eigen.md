@@ -1,7 +1,11 @@
 ---
 title: Eigen
+date: 2025-05-12 13:47:20
+tags: [logger]            
+categories: [open source]        
+top_img:
+cover:  
 ---
-
 
 ## 矩阵Matrix 模板参数
 ``` cpp

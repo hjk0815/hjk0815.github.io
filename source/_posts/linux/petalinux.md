@@ -1,6 +1,13 @@
 ---
-xilinx: petalinux
+title: petalinux
+tags: [os]
+categories: [linux]
+description: petalinux system
+date: 2025-05-12 10:55:41
+top_img: /image/银狼.jpg
+cover: /image/银狼.jpg
 ---
+
 
 
 # 常用指令

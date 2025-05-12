@@ -1,8 +1,8 @@
 ---
 title: OS System        # 标题
 data: 2025-05-12 10:44:27
-tags: [OS]             # 标签
-categories: [Linux]              # 分类
+tags: [os]             # 标签
+categories: [linux]              # 分类
 description: os system  # 描述
 top_img: /image/jizi.png # 顶部背景图
 cover: /image/动漫少女.jpg   # 文章封面
