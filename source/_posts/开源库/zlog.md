@@ -1,5 +1,8 @@
 ---
 title: zlog
+date: 2025-05-12 10:47:20
+tags: [logger]            
+categories: [open source]          
 ---
 
 
@@ -12,3 +15,4 @@ parame : pthread_key_t
         函数指针 指向线程销毁时需要销毁资源的清理函数
 
 
+        
