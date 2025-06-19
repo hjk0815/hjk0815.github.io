@@ -106,7 +106,7 @@ remote ssh连接上设备后， 配置.vscode/launch.json
 ```
 选中源码后使用gdb调试即可(注意先把断点打好)
 
-
+qemu-system-aarch64 -machine virt -cpu cortex-a57 -kernel ./Image -drive file=./rootfs.ext4,format=raw,if=virtio -append "root=/dev/vda console=ttyS0" -s -S -smp 1 -nographic -serial mon:stdio 
 
 
 

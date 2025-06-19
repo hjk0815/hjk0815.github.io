@@ -220,6 +220,26 @@ petalinux-config-->yocto settings-->local sstate feeds settings-->回车，输�
     3. setenv serverip 192.168.1.112
     4. setenv tftp "tftpboot 10000000 system.bit;fpga loadb 0 10000000 1000;tftpboot 0x200000 Image;tftpboot 0x10000000 rootfs.cpio.gz.u-boot;tftpboot 0x1000 system.dtb;booti 0x200000 0x10000000 0x1000"
 
+> 注意这里可以在ui界面里复制不了copy来的内容 可以去 meta-user/recipes-bsp/u-boot/files 下修改cfg文件 添加对应的配置
+``` cfg
+CONFIG_USE_BOOTARGS=y
+CONFIG_BOOTARGS="earlycon console=ttyPS0,115200n8 mem=2G@0x0 root=/dev/mmcblk0p2 rw rootwait rootfstype=ext4 cpuidle.off=1 cma=192M@0x10000000"
+CONFIG_BOOTCOMMAND="bootm 20000000"
+
+CONFIG_PREBOOT="run scsi_init;usb start;mdio write 0 0x1f 0x4000;sleep 1;mdio write 0 0x0D 0x001F;mdio write 0 0x0E 0x0573;mdio write 0 0x0D 0x401F;mdio write 0 0x0E 0x0001;mdio write 0 0x0D 0x001F;mdio write 0 0x0E 0x056a;mdio write 0 0x0D 0x401F;mdio write 0 0x0E 0x5f41;mdio write 0 0x0D 0x001F;mdio write 0 0x0E 0x0602;mdio write 0 0x0D 0x401F;mdio write 0 0x0E 0x0003;fatload mmc 0:1 20000000 image.ub;fatload mmc 0:1 10000000 system.bit;fpga loadb 0 10000000 100;"
+```
+在同级目录下的 platform-top.h 头文件记录了一些u-boot下的环境变量，可以提前在这里设置好
+```h
+#include <configs/xilinx_zynqmp.h>
+
+#define CONFIG_EXTRA_ENV_SETTINGS \
+    "ipaddr=192.168.1.10\0" \
+    "serverip=192.168.1.111\0" \
+    "tftp=tftpboot 10000000 system.bit;fpga loadb 0 10000000 1000;tftpboot 0x200000 Image;tftpboot 0x10000000 rootfs.cpio.gz.u-boot;tftpboot 0x1000 system.dtb;booti 0x200000 0x10000000 0x1000\0"\
+
+```
+
+
 ## initram临时系统文件制作
 1. petalinux-config
 > 配置yocto 配置离线编译 注意download路径需要再前面添加file://
@@ -363,3 +383,38 @@ hawaii运行需要sudo权限
 }
 ```
 打完断点后直接gdb启动就行
+
+
+
+
+# create modules 驱动
+自动添加module
+```bash
+#!/bin/bash
+modules=("dmacloud" "dmaraw" "fittingconfig" "fpgaversion" "jesd204rx0"
+        "jesd204rx1" "pcld32hz8ch" "quadspi" "scan32hz18b" "systemconfig"
+        "tn581tia")
+
+for module in "${modules[@]}"; do
+        petalinux-create -t modules --name "$module" --enable
+done
+
+apps=("autoinsmod" "autostart")
+for app in "${apps[@]}"; do
+  petalinux-create -t apps --template install --name "$app" --enable
+done
+ 
+```
+petalinux-create -t modules --name dmacloud --enable
+petalinux-create -t modules --name dmaraw --enable
+petalinux-create -t modules --name fittingconfig --enable
+petalinux-create -t modules --name fpgaversion --enable
+petalinux-create -t modules --name jesd204rx0 --enable
+petalinux-create -t modules --name jesd204rx1 --enable
+petalinux-create -t modules --name pcld32hz8ch --enable
+petalinux-create -t modules --name quadspi --enable
+petalinux-create -t modules --name scan32hz18b --enable
+petalinux-create -t modules --name systemconfig --enable
+petalinux-create -t modules --name tn581tia --enable
+<!-- petalinux-create -t modules --name pac194x5x --enable -->
+
