@@ -9,7 +9,8 @@ tags: [tools]
 转换链接[sub](https://sub.2c.lol/ "常用的链接 可参考")
 
 # SwitchyOmega (V3) 配置
-配置备份[.bak](/source/_posts/Tools/机场/翻墙工具/OmegaOptions.bak "...")
+<!-- 配置备份[.bak](/source/_posts/Tools/机场/翻墙工具/OmegaOptions.bak "...") -->
+配置备份[.bak](/proxy/OmegaOptions.bak "...")
 
 
 
