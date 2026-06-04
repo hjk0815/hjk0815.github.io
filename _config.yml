@@ -122,7 +122,7 @@ deploy:
   # - type: git
   #   repo: git@github.com:Dereck-327/Dereck-327.github.io.git
   #   branch: master
-  - type: raspberry-local
+  - type: git
     repo: /home/hjk/workspace/00.blog/blog.git
     branch: master
 
