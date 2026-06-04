@@ -122,13 +122,13 @@ deploy:
   # - type: git
   #   repo: git@github.com:Dereck-327/Dereck-327.github.io.git
   #   branch: master
-  - type: git
-    repo: ssh://hjk@blog.xdereck.xyz:8035/home/hjk/workspace/00.blog/blog.git
+  - type: raspberry-local
+    repo: /home/hjk/workspace/00.blog/blog.git
     branch: master
 
 related_posts:
   enable: true
-  enable_env_name: prod  # ⚠️ 强烈建议加上这行
+  enable_env_name: prod  # 
   filter_threshold: 0.2  # 相似度阈值（值越大，要求两篇文章越相似才会被推荐）
   related_count: 5       # 每篇文章底部最多推荐几篇
   weight:                # 算法分析时的权重分配

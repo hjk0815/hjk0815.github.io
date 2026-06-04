@@ -2,7 +2,7 @@
 title: cpp note        
 data: 2026-05-06 10:50:21
 tags: [cpp]             
-categories: [note]              
+categories: [embedded]              
 description: note  
 top_img: /image/jizi.png 
 cover: /image/动漫少女.jpg   
