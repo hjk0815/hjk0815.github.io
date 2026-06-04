@@ -190,12 +190,12 @@ repo sync
 4. Image Build
 
 ```bash
-DISTRO=fsl-imx-xwayland MACHINE=imx8mpevk source ./imx-setup-release.sh -b hawaii_ii
 # 激活环境设置设备参数和编译路径，设备参数的选项还没搞懂
-DISTRO=fsl-imx-xwayland MACHINE=imx8mpevk bitbake core-image-base -c populate_sdk
+DISTRO=fsl-imx-xwayland MACHINE=imx8mpevk source ./imx-setup-release.sh -b hawaii_ii
 # 编译kernel镜像和编译工具链
-DISTRO=fsl-imx-xwayland MACHINE=imx8mp-evk bitbake -c deploy imx-boot
+DISTRO=fsl-imx-xwayland MACHINE=imx8mpevk bitbake core-image-base -c populate_sdk
 # 编译U-boot镜像
+DISTRO=fsl-imx-xwayland MACHINE=imx8mp-evk bitbake -c deploy imx-boot
 ```
 
 # 操作系统修改
@@ -717,4 +717,13 @@ uuu.exe -b emmc_all flash.bin hawaii.wic.bz2
 # 安装 zstd sudo apt install zstd
 # 使用 zstd 压缩 (使用较高的等级 --ultra 20)
 zstd --ultra -20 hawaii.wic -o hawaii.wic.zst
+```
+
+# journalct
+
+```bash
+# 查看历史记录列表
+journalctl --list-boots
+# 查看上一次列表
+journalctl -b -1
 ```
