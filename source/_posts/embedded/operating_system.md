@@ -1,5 +1,5 @@
 ---
-title: device driver        
+title: operating system        
 data: 2026-06-01 15:50:21
 tags: [os]             
 categories: [embedded]              

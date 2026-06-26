@@ -727,3 +727,12 @@ journalctl --list-boots
 # 查看上一次列表
 journalctl -b -1
 ```
+
+# i2cdetect
+
+```bash
+# 先unbind再裸读
+echo 3-0018 > /sys/bus/i2c/drivers/smi230acc_i2c/unbind
+i2cget -y 3 0x18 0x00
+
+```

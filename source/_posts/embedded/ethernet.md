@@ -1,5 +1,5 @@
 ---
-title: ethermet socket        
+title: ethernet socket        
 data: 2026-06-03 16:43:21
 tags: [ethernet]             
 categories: [embedded]              

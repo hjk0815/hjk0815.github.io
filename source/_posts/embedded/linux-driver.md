@@ -13,7 +13,7 @@ cover: /image/动漫少女.jpg
 
 ## 字符设备驱动模型
 
-![字符设备驱动模型](mage/embedded/character-driven-model.png)
+![字符设备驱动模型](/image/embedded/character-driven-model.png)
 
 ### 驱动初始化
 
