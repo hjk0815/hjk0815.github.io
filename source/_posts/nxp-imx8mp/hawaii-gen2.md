@@ -734,5 +734,7 @@ journalctl -b -1
 # 先unbind再裸读
 echo 3-0018 > /sys/bus/i2c/drivers/smi230acc_i2c/unbind
 i2cget -y 3 0x18 0x00
-
+i2cdetect -y 3
+i2cdetect -l
+i2cdump -y 3 0x18
 ```
